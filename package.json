@@ -1,6 +1,6 @@
 {
   "name": "@3m1/service-worker-updater",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "description": "Manage Create React App's Service Worker update",
   "author": "github.com/emibcn",
   "license": "GPL-3.0-or-later",
@@ -20,8 +20,10 @@
     "test:lint": "eslint .",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom --color",
     "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
+    "predeploy-example": "cd example && yarn install && yarn run build",
+    "deploy-example": "gh-pages -d example/build",
+    "deploy": "np --color --preview",
+    "deploy-force": "np --color"
   },
   "peerDependencies": {
     "react": "^17"
@@ -47,6 +49,10 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "^4.0.3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "files": [
     "dist"
