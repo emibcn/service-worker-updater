@@ -27,7 +27,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import { onServiceWorkerUpdate } from 'from '@3m1/service-worker-updater'';
+import { onServiceWorkerUpdate } from '@3m1/service-worker-updater';
 
 // Render the App
 ReactDOM.render(

@@ -1,5 +1,4 @@
 # Editors
-*.swp
 .*.swp
 *~
 
@@ -29,7 +28,7 @@ coverage
 doc
 webpack.config.js
 jsdoc.json
-src/**
-example/**
-**/.eslint*
+src
+example
+.eslint*
 .prettierrc
