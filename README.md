@@ -94,6 +94,11 @@ Just before reloading the page, `'Controller loaded'` will be logged with `conso
 export default withServiceWorkerUpdater( Updater, {log: () => console.warn("App updated!")});
 ```
 
+## See also
+- [React Service Worker](https://www.npmjs.com/package/@medipass/react-service-worker): A headless React component that wraps around the Navigator Service Worker API to manage your service workers. Inspired by Create React App's service worker registration script.
+- [Service Worker Updater - React Hook & HOC](https://www.npmjs.com/package/service-worker-updater): This package provides React hook and HOC to check for service worker updates.
+- [@loopmode/cra-workbox-refresh](https://www.npmjs.com/package/@loopmode/cra-workbox-refresh): Helper for `create-react-app` v2 apps that use the workbox service worker. Displays a UI that informs the user about updates and recommends a page refresh.
+
 ## License
 
 GPL-3.0-or-later © [github.com/emibcn](https://github.com/github.com/emibcn)

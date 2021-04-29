@@ -8,6 +8,18 @@
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
+  "keywords": [
+    "react",
+    "service worker",
+    "ServiceWorker",
+    "sw",
+    "PWA",
+    "SPA",
+    "registration",
+    "create-react-app",
+    "refresh",
+    "update"
+  ],
   "engines": {
     "node": ">=10"
   },
