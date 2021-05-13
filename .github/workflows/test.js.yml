@@ -55,7 +55,6 @@ jobs:
         yarn test:unit || true
         # Ensure we can build
         yarn build
-        yarn clean
 
     # Coverage badges will be updated on any branch
     # and saved into a dedicated one
