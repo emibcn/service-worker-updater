@@ -127,7 +127,7 @@ jobs:
 
     - name: Push badge commit
       if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
-      uses: ad-m/github-push-action@main
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: badges
