@@ -52,7 +52,7 @@ jobs:
       run: |
         yarn install
         # Disabled exit until we reach at least 50% coverage
-        yarn test --color --coverage || true
+        yarn test:unit || true
         # Ensure we can build
         yarn build
         yarn clean
