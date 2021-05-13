@@ -12,7 +12,6 @@ on:
       - 'SECURITY.md'
       - 'CONTRIBUTING.md'
       - 'CODE_OF_CONDUCT.md'
-      - 'app/README.md'
       - 'LICENSE'
       - '.gitignore'
       - 'example/*'
@@ -65,7 +64,7 @@ jobs:
         percentage: 50
         exit: 0
         rounded-precision: 2
-        filename: "app/coverage/clover.xml"
+        filename: "coverage/clover.xml"
 
     - name: Extract branch name
       shell: bash
