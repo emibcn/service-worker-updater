@@ -1,0 +1,134 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      # Can we use '**.md' ?
+      - 'README.md'
+      - 'SECURITY.md'
+      - 'CONTRIBUTING.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'app/README.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - 'example/*'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Manage cache
+      uses: actions/cache@v2.0.0
+      with:
+        path: |
+          node_modules
+        key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+        restore-keys: |
+          ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+          ${{ runner.OS }}-build
+
+    - name: yarn install and test
+      working-directory: ./
+      run: |
+        yarn install
+        # Disabled exit until we reach at least 50% coverage
+        yarn test --color --coverage || true
+        # Ensure we can build
+        yarn build
+        yarn clean
+
+    # Coverage badges will be updated on any branch
+    # and saved into a dedicated one
+    - name: Check test coverage
+      uses: johanvanhelden/gha-clover-test-coverage-check@v1
+      id: coverage
+      with:
+        percentage: 50
+        exit: 0
+        rounded-precision: 2
+        filename: "app/coverage/clover.xml"
+
+    - name: Extract branch name
+      shell: bash
+      run: |
+        TMP_PULL_HEAD_REF="${{ github.head_ref }}"
+        TMP_GITHUB_REF="${GITHUB_REF#refs/heads/}"
+        EXPORT_VALUE=""
+        if [ "${TMP_PULL_HEAD_REF}" != "" ]
+        then
+            EXPORT_VALUE="${TMP_PULL_HEAD_REF}"
+        else
+            EXPORT_VALUE="${TMP_GITHUB_REF}"
+        fi
+        echo "##[set-output name=branch;]$(echo ${EXPORT_VALUE})"
+      id: extract_branch
+
+    - uses: actions/checkout@v2
+      if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
+      with:
+        ref: badges
+        path: badges
+
+    # Use the output from the `coverage` step
+    - name: Generate the badge SVG image
+      if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
+      uses: emibcn/badge-action@v1
+      id: badge
+      with:
+        label: 'Coverage'
+        status: ${{ steps.coverage.outputs.coverage-rounded-display }}
+        color: ${{
+          steps.coverage.outputs.coverage > 90 && 'green'              ||
+          steps.coverage.outputs.coverage > 80 && 'yellow,green'       ||
+          steps.coverage.outputs.coverage > 70 && 'yellow'             ||
+          steps.coverage.outputs.coverage > 60 && 'orange,yellow'      ||
+          steps.coverage.outputs.coverage > 50 && 'orange'             ||
+          steps.coverage.outputs.coverage > 40 && 'red,orange'         ||
+          steps.coverage.outputs.coverage > 30 && 'red,red,orange'     ||
+          steps.coverage.outputs.coverage > 20 && 'red,red,red,orange' ||
+          'red' }}
+        path: badges/test-coverage.svg
+
+    - name: Commit badge
+      if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
+      env:
+        BRANCH: ${{ steps.extract_branch.outputs.branch }}
+        FILE: 'test-coverage.svg'
+      working-directory: ./badges
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        mkdir -p "${BRANCH}"
+        mv "${FILE}" "${BRANCH}"
+        git add "${BRANCH}/${FILE}"
+
+        # Will give error if badge did not changed
+        git commit -m "Add/Update badge" || true
+
+    - name: Push badge commit
+      if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
+      uses: ad-m/github-push-action@main
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: badges
+        directory: badges
