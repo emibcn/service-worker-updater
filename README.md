@@ -1,10 +1,15 @@
+[![NPM](https://img.shields.io/npm/v/@3m1/service-worker-updater.svg)](https://www.npmjs.com/package/@3m1/service-worker-updater)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Test](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml/badge.svg)](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml)
+![Coverage](https://raw.githubusercontent.com/emibcn/service-worker-updater/badges/main/test-coverage.svg)
+[![BundlePhobia Minified Size](https://badgen.net/bundlephobia/min/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
+[![BundlePhobia Minzipped Size](https://badgen.net/bundlephobia/minzip/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
+[![BundlePhobia Dependency Count](https://badgen.net/bundlephobia/dependency-count/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
+[![BundlePhobia Tree-shaking support](https://badgen.net/bundlephobia/tree-shaking/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
+
 # @3m1/service-worker-updater
 
 > Manage Create React App's Service Worker update
-
-[![NPM](https://img.shields.io/npm/v/@3m1/service-worker-updater.svg)](https://www.npmjs.com/package/@3m1/service-worker-updater) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Test](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml/badge.svg)](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml)
-![Coverage](https://raw.githubusercontent.com/emibcn/service-worker-updater/badges/main/test-coverage.svg)
 
 If you have opted-in for the `register` callback of `serviceWorkerRegistration` in the `index.js` of the [PWA version of Create React APP](https://create-react-app.dev/docs/making-a-progressive-web-app/), you probably want to allow your users to update the application once a new service worker has been detected.
 
@@ -13,8 +18,16 @@ Usually, browsers check for a new service worker version of a PWA every few days
 
 ## Install
 
+### NPM
+
 ```bash
 npm install --save @3m1/service-worker-updater
+```
+
+### Yarn
+
+```bash
+yarn add @3m1/service-worker-updater
 ```
 
 ## Usage
