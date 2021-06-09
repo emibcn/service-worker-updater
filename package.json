@@ -1,6 +1,6 @@
 {
   "name": "@3m1/service-worker-updater",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Manage Create React App's Service Worker update",
   "author": "github.com/emibcn",
   "license": "GPL-3.0-or-later",
