@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, forwardRef, useEffect } from 'react';
 import updateSW from './updateSW';
 
 /*
@@ -29,8 +29,8 @@ const withServiceWorkerUpdater = (
      * - registration: received from event listener registered in index on SW registration
      * - newServiceWorkerDetected: wether a new SW has been detected
      */
-    const [registration, setRegistration] = React.useState(false);
-    const [newServiceWorkerDetected, setNewServiceWorkerDetected] = React.useState(false);
+    const [registration, setRegistration] = useState(false);
+    const [newServiceWorkerDetected, setNewServiceWorkerDetected] = useState(false);
 
     // Callback to execute when user accepts the update
     const handleLoadNewServiceWorkerAccept = () => {
@@ -38,7 +38,7 @@ const withServiceWorkerUpdater = (
     }
 
     // Add/remove event listeners for event thrown from `index.js`
-    React.useEffect(() => {
+    useEffect(() => {
       const handleNewServiceWorker = (event) => {
         setRegistration(event.detail.registration);
         setNewServiceWorkerDetected(true);
@@ -63,7 +63,7 @@ const withServiceWorkerUpdater = (
   }
 
   // Return wrapper respecting ref
-  return React.forwardRef(
+  return forwardRef(
     (props, ref) => <SWUpdater { ...props } forwardedRef={ ref } />
   );
 }
