@@ -10,13 +10,15 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@3m1/service-worker-updater": "^1.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^4.0.3",
-    "@3m1/service-worker-updater": "^1.0.5"
+    "react-scripts": "^4.0.3"
   },
   "devDependencies": {
-    "@babel/plugin-syntax-object-rest-spread": "^7.8.3"
+    "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9"
   },
   "eslintConfig": {
     "extends": "react-app"
