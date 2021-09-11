@@ -5,7 +5,11 @@
  * - Send message to SW to trigger the update
  * - Once the SW has been updated, reload this window to load new assets
  */
-const updateSW = (registration, message, log) => {
+const updateSW = (
+  registration: ServiceWorkerRegistration,
+  message: unknown,
+  log: () => void
+) => {
   // `waiting` is the newly detected SW
   if (registration.waiting) {
     /*
@@ -13,8 +17,8 @@ const updateSW = (registration, message, log) => {
      * Register an event to controllerchange, wich will be fired when the
      * `waiting` SW executes `skipWaiting`
      */
-    let preventDevToolsReloadLoop
-    navigator.serviceWorker.addEventListener('controllerchange', (event) => {
+    let preventDevToolsReloadLoop = false
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
       /*
        * Ensure refresh is only called once.
        * This works around a bug in "force update on reload".
@@ -27,7 +31,7 @@ const updateSW = (registration, message, log) => {
       log()
 
       // Finally, refresh the page
-      global.location.reload(true)
+      global.location.reload()
     })
 
     /*
