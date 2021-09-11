@@ -1,10 +1,13 @@
 [![NPM](https://img.shields.io/npm/v/@3m1/service-worker-updater.svg)](https://www.npmjs.com/package/@3m1/service-worker-updater)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/emibcn/service-worker-updater/blob/main/CODE_OF_CONDUCT.md)
 [![Test](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml/badge.svg)](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml)
-![Coverage](https://raw.githubusercontent.com/emibcn/service-worker-updater/badges/main/test-coverage.svg)
+[![Coverage](https://raw.githubusercontent.com/emibcn/service-worker-updater/badges/main/test-coverage.svg)](https://github.com/emibcn/service-worker-updater/actions/workflows/test.js.yml)
 [![BundlePhobia Minified Size](https://badgen.net/bundlephobia/min/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
 [![BundlePhobia Minzipped Size](https://badgen.net/bundlephobia/minzip/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
 [![BundlePhobia Dependency Count](https://badgen.net/bundlephobia/dependency-count/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
 [![BundlePhobia Tree-shaking support](https://badgen.net/bundlephobia/tree-shaking/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
+[![Monthly Downloads](https://badgen.net/npm/dm/@3m1/service-worker-updater)](https://www.npmjs.com/package/@3m1/service-worker-updater)
+[![Dependabot Active](https://badgen.net/github/dependabot/emibcn/service-worker-updater)](https://github.com/emibcn/service-worker-updater/blob/main/.github/dependabot.yml)
 
 # @3m1/service-worker-updater
 
@@ -95,7 +98,26 @@ const Updater = (props: ServiceWorkerUpdaterProps) => {
   return newServiceWorkerDetected ? (
     <>
       New version detected.
-      <button onClick={onLoadNewServiceWorkerAccept}>Update!</button>
+      <button onClick={ onLoadNewServiceWorkerAccept }>Update!</button>
+    </>
+  ) : null // If no update is available, render nothing
+}
+
+export default withServiceWorkerUpdater(Updater)
+```
+
+For non Typescript projects, use the following snippet:
+
+```jsx
+import React from 'react'
+import { withServiceWorkerUpdater } from '@3m1/service-worker-updater'
+
+const Updater = (props) => {
+  const { newServiceWorkerDetected, onLoadNewServiceWorkerAccept } = props
+  return newServiceWorkerDetected ? (
+    <>
+      New version detected.
+      <button onClick={ onLoadNewServiceWorkerAccept }>Update!</button>
     </>
   ) : null // If no update is available, render nothing
 }
@@ -118,6 +140,9 @@ export default withServiceWorkerUpdater(Updater, {
   log: () => console.warn('App updated!')
 })
 ```
+
+## :trophy: Thanks to
+- [<img align="center" width="30px" height="30px" src="https://avatars.githubusercontent.com/u/2166114?s=40&v=4" />](https://github.com/aeharding) [Alexander Harding](https://github.com/aeharding) for [translating the library into Typescript](https://github.com/emibcn/service-worker-updater/pull/55).
 
 ## See also
 
