@@ -142,6 +142,36 @@ export default withServiceWorkerUpdater(Updater, {
 })
 ```
 
+## Persistence
+
+When a new service worker is detected an event is fired. If the app is refreshed, the event is not fired again so you'll no longer be able to notify users about service worker updates. This package provides a solution to that in the form of a `PersistenceService`.
+
+The persistence service is injected into the component and handles persisting the state after refresh. The package comes with a default persistence service based on local storage. It can be used thus:
+
+```
+import { LocalStoragePersistenceService } from '@3m1/service-worker-updater'
+
+const Updater = () => {}
+
+export default withServiceWorkerUpdater(Updater, { persistenceService: new LocalStoragePersistenceService() })
+```
+
+You can define your own persistence layer based on other mechanisms by adhering to the `PersistenceService` interface:
+
+```
+import { PersistenceService } from '@3m1/service-worker-updater'
+
+class YourPersistenceService implements PersistenceService {
+  setUpdateIsNeeded(): void {}
+
+  clear(): void {}
+
+  isUpdateNeeded(): boolean {
+    return false
+  }
+}
+```
+
 ## :trophy: Thanks to
 
 - [<img align="center" width="30px" height="30px" src="https://avatars.githubusercontent.com/u/2166114?s=40&v=4" />](https://github.com/aeharding) [Alexander Harding](https://github.com/aeharding) for [translating the library into Typescript](https://github.com/emibcn/service-worker-updater/pull/55).

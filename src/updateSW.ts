@@ -1,5 +1,7 @@
 // Reference: https://developers.google.com/web/tools/workbox/guides/advanced-recipes
 
+import PersistenceService from './PersistenceService'
+
 /*
  * Callback to call when user accepts loading the new service worker
  * - Send message to SW to trigger the update
@@ -29,6 +31,9 @@ const updateSW = (
 
       preventDevToolsReloadLoop = true
       log()
+
+      // Clear the persisted state about service worker update being available
+      persistenceService.clear()
 
       // Finally, refresh the page
       global.location.reload()

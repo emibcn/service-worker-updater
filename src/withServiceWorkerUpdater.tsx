@@ -1,4 +1,7 @@
 import React, { useState, forwardRef, useEffect } from 'react'
+import PersistenceService, {
+  NullPersistenceService
+} from './PersistenceService/'
 import updateSW from './updateSW'
 
 export interface ServiceWorkerUpdaterProps {
@@ -9,6 +12,7 @@ export interface ServiceWorkerUpdaterProps {
 export interface WithServiceWorkerUpdaterOptions {
   message?: unknown
   log?: () => void
+  persistenceService?: PersistenceService
 }
 
 /*
@@ -29,7 +33,8 @@ function withServiceWorkerUpdater<P>(
   WrappedComponent: React.ComponentType<P & ServiceWorkerUpdaterProps>,
   {
     message = { type: 'SKIP_WAITING' },
-    log = () => console.log('Controller loaded')
+    log = () => console.log('Controller loaded'),
+    persistenceService = new NullPersistenceService()
   }: WithServiceWorkerUpdaterOptions = {}
 ) {
   function SWUpdater({
@@ -54,7 +59,7 @@ function withServiceWorkerUpdater<P>(
     const handleLoadNewServiceWorkerAccept = () => {
       if (!registration) throw new Error('ServiceWorkerRegistration not found')
 
-      updateSW(registration, message, log)
+      updateSW(registration, message, log, persistenceService)
     }
 
     // Add/remove event listeners for event thrown from `index.js`
@@ -66,6 +71,7 @@ function withServiceWorkerUpdater<P>(
       ) => {
         setRegistration(event.detail.registration)
         setNewServiceWorkerDetected(true)
+        persistenceService.setUpdateIsNeeded()
       }) as EventListener
 
       document.addEventListener('onNewServiceWorker', handleNewServiceWorker)
@@ -75,6 +81,10 @@ function withServiceWorkerUpdater<P>(
           handleNewServiceWorker
         )
     }, [setRegistration, setNewServiceWorkerDetected])
+
+    useEffect(() => {
+      setNewServiceWorkerDetected(persistenceService.isUpdateNeeded())
+    }, [setNewServiceWorkerDetected])
 
     /*
      * Render the WrappedComponent with:
