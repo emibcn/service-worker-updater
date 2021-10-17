@@ -8,6 +8,7 @@
 [![BundlePhobia Tree-shaking support](https://badgen.net/bundlephobia/tree-shaking/@3m1/service-worker-updater)](https://bundlephobia.com/result?p=@3m1/service-worker-updater)
 [![Monthly Downloads](https://badgen.net/npm/dm/@3m1/service-worker-updater)](https://www.npmjs.com/package/@3m1/service-worker-updater)
 [![Dependabot Active](https://badgen.net/github/dependabot/emibcn/service-worker-updater)](https://github.com/emibcn/service-worker-updater/blob/main/.github/dependabot.yml)
+[![DeepSource](https://deepsource.io/gh/emibcn/service-worker-updater.svg/?label=active+issues&show_trend=true&token=lpel9ySTZydoTIbv0WGSfgOc)](https://deepsource.io/gh/emibcn/service-worker-updater/?ref=repository-badge)
 
 # @3m1/service-worker-updater
 
