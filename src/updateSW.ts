@@ -9,7 +9,7 @@ const updateSW = (
   registration: ServiceWorkerRegistration,
   message: unknown,
   log: () => void
-): void  => {
+): void => {
   // `waiting` is the newly detected SW
   if (registration.waiting) {
     /*
