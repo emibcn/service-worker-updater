@@ -19,7 +19,22 @@ on:
     branches: [ main ]
 
 jobs:
+  check-secrets:
+      outputs:
+        github-token: ${{ steps.github-token.outputs.defined }}
+      steps:
+        - id: github-token
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if: "${{ env.GITHUB_TOKEN != '' }}"
+          run: echo "::set-output name=defined::true"
+        - id: deepsource-token
+          env:
+            DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+          if: "${{ env.DEEPSOURCE_DSN != '' }}"
+          run: echo "::set-output name=defined::true"
   test:
+    needs: [check-secrets]
 
     runs-on: ubuntu-latest
 
@@ -73,12 +88,14 @@ jobs:
 
     - name: yarn test for DeepSource
       working-directory: ./
+      if: ${{ needs.check-secrets.outputs.deepsource-token == 'true'  }}
       run: |
         # Disabled exit until we reach at least 50% coverage
         yarn test:unit:cobertura
 
     - name: Report test coverage to DeepSource
       uses: deepsourcelabs/test-coverage-action@master
+      if: ${{ needs.check-secrets.outputs.deepsource-token == 'true'  }}
       with:
         key: javascript
         coverage-file: coverage/cobertura-coverage.xml
@@ -91,8 +108,8 @@ jobs:
     # - One of these is met:
     #   - This is a pull request event and the pull actor is the same as the repo owner
     #   - This is a push event and the push event is on branch 'main'
-    needs: test
-    if: ${{ ( github.event_name == 'pull_request' && github.actor == github.repository_owner ) || github.ref == 'refs/heads/main' }}
+    needs: [test,check-secrets]
+    if: ${{ needs.check-secrets.outputs.github-token == 'true' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
 
     runs-on: ubuntu-latest
 
