@@ -15,6 +15,10 @@ enabled = true
   plugins = ["react"]
   environment = ["browser", "jest", "nodejs"]
 
+[[analyzers]]
+name = "test-coverage"
+enabled = true
+
 [[transformers]]
 name = "prettier"
 enabled = true

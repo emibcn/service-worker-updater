@@ -54,9 +54,9 @@ jobs:
     - name: yarn install and test
       working-directory: ./
       run: |
-        yarn install
-        # Disabled exit until we reach at least 50% coverage
-        yarn test:unit || true
+        yarn --immutable
+        yarn test
+
         # Ensure we can build
         yarn build
 
@@ -70,6 +70,19 @@ jobs:
         exit: 0
         rounded-precision: 2
         filename: "coverage/clover.xml"
+
+    - name: yarn test for DeepSource
+      working-directory: ./
+      run: |
+        # Disabled exit until we reach at least 50% coverage
+        yarn test:unit:cobertura
+
+    - name: Report test coverage to DeepSource
+      uses: deepsourcelabs/test-coverage-action@master
+      with:
+        key: javascript
+        coverage-file: coverage/cobertura-coverage.xml
+        dsn: ${{ secrets.DEEPSOURCE_DSN }}
 
   badge:
 

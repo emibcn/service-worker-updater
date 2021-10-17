@@ -34,6 +34,7 @@
     "test:build": "run-s build",
     "test:lint": "eslint .",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom --color --coverage",
+    "test:unit:cobertura": "cross-env CI=1 react-scripts test --env=jsdom --color --coverage --coverageReporters=cobertura",
     "test:unit-html": "cross-env CI=1 react-scripts test --env=jsdom --color --coverage --coverageReporters=html",
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy-example": "cd example && yarn install && yarn run build",
