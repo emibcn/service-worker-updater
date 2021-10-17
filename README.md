@@ -98,7 +98,7 @@ const Updater = (props: ServiceWorkerUpdaterProps) => {
   return newServiceWorkerDetected ? (
     <>
       New version detected.
-      <button onClick={ onLoadNewServiceWorkerAccept }>Update!</button>
+      <button onClick={onLoadNewServiceWorkerAccept}>Update!</button>
     </>
   ) : null // If no update is available, render nothing
 }
@@ -117,7 +117,7 @@ const Updater = (props) => {
   return newServiceWorkerDetected ? (
     <>
       New version detected.
-      <button onClick={ onLoadNewServiceWorkerAccept }>Update!</button>
+      <button onClick={onLoadNewServiceWorkerAccept}>Update!</button>
     </>
   ) : null // If no update is available, render nothing
 }
@@ -142,6 +142,7 @@ export default withServiceWorkerUpdater(Updater, {
 ```
 
 ## :trophy: Thanks to
+
 - [<img align="center" width="30px" height="30px" src="https://avatars.githubusercontent.com/u/2166114?s=40&v=4" />](https://github.com/aeharding) [Alexander Harding](https://github.com/aeharding) for [translating the library into Typescript](https://github.com/emibcn/service-worker-updater/pull/55).
 
 ## See also
