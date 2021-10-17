@@ -93,8 +93,11 @@ function withServiceWorkerUpdater<P>(
   }
 
   // Return wrapper respecting ref
+  function SWUpdaterForwardingRef (props, ref) {
+    return <SWUpdater {...props} forwardedRef={ref} />
+  }
   return forwardRef<React.ComponentType<P & ServiceWorkerUpdaterProps>, P>(
-    (props, ref) => <SWUpdater {...props} forwardedRef={ref} />
+    SWUpdaterForwardingRef
   )
 }
 
