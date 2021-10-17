@@ -20,19 +20,22 @@ on:
 
 jobs:
   check-secrets:
-      outputs:
-        github-token: ${{ steps.github-token.outputs.defined }}
-      steps:
-        - id: github-token
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          if: "${{ env.GITHUB_TOKEN != '' }}"
-          run: echo "::set-output name=defined::true"
-        - id: deepsource-token
-          env:
-            DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
-          if: "${{ env.DEEPSOURCE_DSN != '' }}"
-          run: echo "::set-output name=defined::true"
+    runs-on: ubuntu-latest
+    outputs:
+      github-token: ${{ steps.github-token.outputs.defined }}
+      deepsource-token: ${{ steps.github-token.outputs.defined }}
+    steps:
+    - id: github-token
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: "${{ env.GITHUB_TOKEN != '' }}"
+      run: echo "::set-output name=defined::true"
+    - id: deepsource-token
+      env:
+        DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+      if: "${{ env.DEEPSOURCE_DSN != '' }}"
+      run: echo "::set-output name=defined::true"
+
   test:
     needs: [check-secrets]
 
