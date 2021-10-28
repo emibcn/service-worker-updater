@@ -148,17 +148,20 @@ When a new service worker is detected an event is fired. If the app is refreshed
 
 The persistence service is injected into the component and handles persisting the state after refresh. The package comes with a default persistence service based on local storage. It can be used thus:
 
-```
+```tsx
 import { LocalStoragePersistenceService } from '@3m1/service-worker-updater'
 
-const Updater = () => {}
+const Updater = () => { /* Your updater component code */ }
 
-export default withServiceWorkerUpdater(Updater, { persistenceService: new LocalStoragePersistenceService() })
+export default withServiceWorkerUpdater(
+  Updater,
+  { persistenceService: new LocalStoragePersistenceService() }
+)
 ```
 
 You can define your own persistence layer based on other mechanisms by adhering to the `PersistenceService` interface:
 
-```
+```tsx
 import { PersistenceService } from '@3m1/service-worker-updater'
 
 class YourPersistenceService implements PersistenceService {
