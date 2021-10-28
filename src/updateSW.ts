@@ -10,7 +10,8 @@ import PersistenceService from './PersistenceService'
 const updateSW = (
   registration: ServiceWorkerRegistration,
   message: unknown,
-  log: () => void
+  log: () => void,
+  persistenceService: PersistenceService
 ): void => {
   // `waiting` is the newly detected SW
   if (registration.waiting) {
