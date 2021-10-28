@@ -155,7 +155,7 @@ const Updater = () => { /* Your updater component code */ }
 
 export default withServiceWorkerUpdater(
   Updater,
-  { persistenceService: new LocalStoragePersistenceService() }
+  { persistenceService: new LocalStoragePersistenceService('myApp') }
 )
 ```
 
