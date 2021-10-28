@@ -1,10 +1,10 @@
 import PersistenceService from './persistenceService'
 
 class LocalStoragePersistenceService implements PersistenceService {
-  private id: number
+  private appId: string
 
-  constructor() {
-    this.id = Math.random()
+  constructor(appId: string) {
+    this.appId = appId
   }
 
   setUpdateIsNeeded(): void {
@@ -20,7 +20,7 @@ class LocalStoragePersistenceService implements PersistenceService {
   }
 
   private key() {
-    return `LocalStoragePersistenceService-${this.id}`
+    return `LocalStoragePersistenceService-${this.appId}`
   }
 }
 

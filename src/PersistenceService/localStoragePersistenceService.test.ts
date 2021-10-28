@@ -28,16 +28,18 @@ describe('LocalStoragePersistenceService', () => {
 
   describe('initialisation', () => {
     it('has a false state', () => {
-      const localStoragePersistenceService =
-        new LocalStoragePersistenceService()
+      const localStoragePersistenceService = new LocalStoragePersistenceService(
+        'myApp'
+      )
       expect(localStoragePersistenceService.isUpdateNeeded()).toBe(false)
     })
   })
 
   describe('setUpdateIsNeeded()', () => {
     it('updates the state to true', () => {
-      const localStoragePersistenceService =
-        new LocalStoragePersistenceService()
+      const localStoragePersistenceService = new LocalStoragePersistenceService(
+        'myApp'
+      )
       expect(localStoragePersistenceService.isUpdateNeeded()).toBe(false)
       localStoragePersistenceService.setUpdateIsNeeded()
       expect(localStoragePersistenceService.isUpdateNeeded()).toBe(true)
@@ -46,8 +48,9 @@ describe('LocalStoragePersistenceService', () => {
 
   describe('clear()', () => {
     it('updates the state to false', () => {
-      const localStoragePersistenceService =
-        new LocalStoragePersistenceService()
+      const localStoragePersistenceService = new LocalStoragePersistenceService(
+        'myApp'
+      )
       localStoragePersistenceService.setUpdateIsNeeded()
       expect(localStoragePersistenceService.isUpdateNeeded()).toBe(true)
       localStoragePersistenceService.clear()
