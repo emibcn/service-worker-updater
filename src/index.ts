@@ -7,10 +7,13 @@ import PersistenceService, {
   LocalStoragePersistenceService
 } from './PersistenceService'
 
-export { withServiceWorkerUpdater, onServiceWorkerUpdate }
+export {
+  withServiceWorkerUpdater,
+  onServiceWorkerUpdate,
+  LocalStoragePersistenceService
+}
 export type {
   ServiceWorkerUpdaterProps,
   WithServiceWorkerUpdaterOptions,
-  PersistenceService,
-  LocalStoragePersistenceService
+  PersistenceService
 }
