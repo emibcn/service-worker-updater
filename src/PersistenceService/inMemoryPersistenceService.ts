@@ -1,7 +1,7 @@
 import PersistenceService from './persistenceService'
 
 class InMemoryPersistenceService implements PersistenceService {
-  private value: boolean = false
+  private value = false
 
   setUpdateIsNeeded(): void {
     this.value = true
