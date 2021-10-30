@@ -151,12 +151,13 @@ The persistence service is injected into the component and handles persisting th
 ```tsx
 import { LocalStoragePersistenceService } from '@3m1/service-worker-updater'
 
-const Updater = () => { /* Your updater component code */ }
+const Updater = () => {
+  /* Your updater component code */
+}
 
-export default withServiceWorkerUpdater(
-  Updater,
-  { persistenceService: new LocalStoragePersistenceService('myApp') }
-)
+export default withServiceWorkerUpdater(Updater, {
+  persistenceService: new LocalStoragePersistenceService('myApp')
+})
 ```
 
 You can define your own persistence layer based on other mechanisms by adhering to the `PersistenceService` interface:
