@@ -10,34 +10,40 @@ import '@testing-library/jest-dom/extend-expect'
 
 import withServiceWorkerUpdater from './withServiceWorkerUpdater'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const delay = (millis: number) =>
-  new Promise((resolve) => setTimeout(resolve, millis))
+import PersistenceService, {
+  InMemoryPersistenceService,
+  NullPersistenceService
+} from './PersistenceService'
 
-const SWDetector = withServiceWorkerUpdater(
-  (props: {
-    onAccept?: (t: string) => void
-    onLoadNewServiceWorkerAccept?: (a: unknown) => void
-    newServiceWorkerDetected?: unknown
-  }) => (
-    <>
-      <button
-        data-testid='dashboard-mock-fn-accept-sw'
-        onClick={() => {
-          props.onAccept?.('tested')
-          props.onLoadNewServiceWorkerAccept?.({
-            detail: { registration: 'tested' }
-          })
-        }}
-      >
-        Accept Service Worker
-      </button>
-      <div data-testid='dashboard-mock-sw-detected'>
-        {JSON.stringify(props.newServiceWorkerDetected)}
-      </div>
-    </>
+const createServiceWorkerUpdater = (
+  persistenceService: PersistenceService = new NullPersistenceService()
+) => {
+  return withServiceWorkerUpdater(
+    (props: {
+      onAccept?: (t: string) => void
+      onLoadNewServiceWorkerAccept?: (a: unknown) => void
+      newServiceWorkerDetected?: unknown
+    }) => (
+      <>
+        <button
+          data-testid='dashboard-mock-fn-accept-sw'
+          onClick={() => {
+            props.onAccept?.('tested')
+            props.onLoadNewServiceWorkerAccept?.({
+              detail: { registration: 'tested' }
+            })
+          }}
+        >
+          Accept Service Worker
+        </button>
+        <div data-testid='dashboard-mock-sw-detected'>
+          {JSON.stringify(props.newServiceWorkerDetected)}
+        </div>
+      </>
+    ),
+    { persistenceService }
   )
-)
+}
 
 // Fire event for new service worker detection
 const triggerNewServiceWorker = () => {
@@ -48,6 +54,8 @@ const triggerNewServiceWorker = () => {
 }
 
 test('detects new service worker', async () => {
+  const SWDetector = createServiceWorkerUpdater()
+
   let app: RenderResult
   act(() => {
     app = render(<SWDetector />)
@@ -64,6 +72,8 @@ test('detects new service worker', async () => {
 })
 
 test('detects new service worker acceptance', async () => {
+  const SWDetector = createServiceWorkerUpdater()
+
   const onLoadNewServiceWorkerAccept = jest.fn()
   let app: RenderResult
   act(() => {
@@ -81,6 +91,61 @@ test('detects new service worker acceptance', async () => {
     await waitFor(() => {
       expect(onLoadNewServiceWorkerAccept).toHaveBeenCalledTimes(1)
       expect(onLoadNewServiceWorkerAccept).toHaveBeenCalledWith('tested')
+    })
+  })
+})
+
+test('persistence service returns FALSE when new service worker hasnt been detected', async () => {
+  const persistenceService = new InMemoryPersistenceService()
+  const SWDetector = createServiceWorkerUpdater(persistenceService)
+
+  persistenceService.clear()
+
+  act(() => {
+    render(<SWDetector />)
+  })
+
+  await act(async () => {
+    await waitFor(() => {
+      expect(persistenceService.isUpdateNeeded()).toBe(false)
+    })
+  })
+})
+
+test('persistence service returns TRUE when new service worker is detected', async () => {
+  const persistenceService = new InMemoryPersistenceService()
+  const SWDetector = createServiceWorkerUpdater(persistenceService)
+
+  persistenceService.clear()
+
+  act(() => {
+    render(<SWDetector />)
+  })
+
+  act(triggerNewServiceWorker)
+
+  await act(async () => {
+    await waitFor(() => {
+      expect(persistenceService.isUpdateNeeded()).toBe(true)
+    })
+  })
+})
+
+test('when persistence service returns true, component state reflects that', async () => {
+  const persistenceService = new InMemoryPersistenceService()
+  const SWDetector = createServiceWorkerUpdater(persistenceService)
+
+  persistenceService.setUpdateIsNeeded()
+
+  let app: RenderResult
+  act(() => {
+    app = render(<SWDetector />)
+  })
+
+  await act(async () => {
+    await waitFor(() => {
+      const detectedNewSW = app.getByTestId('dashboard-mock-sw-detected')
+      expect(detectedNewSW).toHaveTextContent('true')
     })
   })
 })
