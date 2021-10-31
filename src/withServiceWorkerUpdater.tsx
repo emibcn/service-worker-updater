@@ -93,7 +93,7 @@ function withServiceWorkerUpdater<P>(
     // Use Promise syntax to avoid `async`/`await` in event listener callback
     const handleLoadNewServiceWorkerAccept = () => {
       updateSWSafe(registration, message, log, persistenceService).catch(
-        (error: any): void => {
+        (error: unknown): void => {
           // Rethrow error into React rendering stack
           throw error
         }
