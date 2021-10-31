@@ -15,6 +15,40 @@ export interface WithServiceWorkerUpdaterOptions {
   persistenceService?: PersistenceService
 }
 
+// If there is no registration, try to get one from ServiceWorker API
+// This happens when a waiting SW state has been loaded from a persistenceService
+const updateSWSafe = async (
+  registration: ServiceWorkerRegistration | null,
+  message: unknown,
+  log: () => void,
+  persistenceService: PersistenceService
+): Promise<void> => {
+  if (!registration) {
+    const { controller } = navigator.serviceWorker
+    if (controller) {
+      // If we have controller, use it's URL to re-register it
+      const registrationFromAPI = await navigator.serviceWorker.register(
+        controller.scriptURL
+      )
+
+      // If we could register it and there is a waiting SW, use it
+      if (registrationFromAPI?.waiting) {
+        updateSW(registrationFromAPI, message, log, persistenceService)
+      } else {
+        throw new Error(
+          'ServiceWorkerRegistration not found and no waiting ServiceWorker found'
+        )
+      }
+    } else {
+      throw new Error(
+        'ServiceWorkerRegistration not found and no ServiceWorker detected'
+      )
+    }
+  } else {
+    updateSW(registration, message, log, persistenceService)
+  }
+}
+
 /*
  * HOC to generate a Wrapper component which
  * will add to the WrappedComponent the next props:
@@ -56,10 +90,14 @@ function withServiceWorkerUpdater<P>(
       useState(false)
 
     // Callback to execute when user accepts the update
+    // Use Promise syntax to avoid `async`/`await` in event listener callback
     const handleLoadNewServiceWorkerAccept = () => {
-      if (!registration) throw new Error('ServiceWorkerRegistration not found')
-
-      updateSW(registration, message, log, persistenceService)
+      updateSWSafe(registration, message, log, persistenceService).catch(
+        (error: any): void => {
+          // Rethrow error into React rendering stack
+          throw error
+        }
+      )
     }
 
     // Add/remove event listeners for event thrown from `index.js`
