@@ -31,6 +31,30 @@ jobs:
       run: |
         if [ "${GITHUB_TOKEN}" != "" ]
         then
+            echo "Found GitHub token"
+            echo "::set-output name=defined::true"
+        fi
+    - id: github-token-write
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # https://stackoverflow.com/a/70588035/2928168
+        PERMISSIONS="$(
+            curl -sS -f -I \
+                -H "Authorization: token ${GITHUB_TOKEN}" \
+                https://api.github.com \
+                | grep ^x-oauth-scopes: \
+                | cut -d' ' -f2- \
+                | tr -d "[:space:]" \
+                | tr ',' '\n'
+        )"
+
+        echo "Permissions:"
+        echo "${PERMISSIONS}" | sed -e 's/^/ - /g'
+
+        if echo "${PERMISSIONS}" | grep "" > /dev/null 2>&1
+        then
+            echo "Found token with write permission to repo"
             echo "::set-output name=defined::true"
         fi
     - id: deepsource-token
@@ -39,6 +63,7 @@ jobs:
       run: |
         if [ "${DEEPSOURCE_DSN}" != '' ]
         then
+            echo "Found DeepSource token"
             echo "::set-output name=defined::true"
         fi
 
