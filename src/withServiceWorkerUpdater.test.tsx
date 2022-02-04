@@ -61,7 +61,7 @@ test('detects new service worker', async () => {
   await waitFor(() => {
     detectedNewSW = screen.getByTestId('dashboard-mock-sw-detected')
   })
-  await act(() => {
+  act(() => {
     expect(detectedNewSW).toHaveTextContent('true')
   })
 })
