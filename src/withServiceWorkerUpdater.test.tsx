@@ -9,6 +9,9 @@ import PersistenceService, {
   NullPersistenceService
 } from './PersistenceService'
 
+/*
+ * Creates a testing component wrapped by our HOC
+ */
 const createServiceWorkerUpdater = (
   persistenceService: PersistenceService = new NullPersistenceService()
 ) => {
