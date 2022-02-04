@@ -53,10 +53,10 @@ jobs:
         echo "${PERMISSIONS}" | sed -e 's/^/ - /g'
         curl -sS -f -I \
             -H "Authorization: token ${GITHUB_TOKEN}" \
-            https://api.github.com \
+            https://api.github.com
         curl -sS -f -I \
             -H "Authorization: token ghp_${GITHUB_TOKEN}" \
-            https://api.github.com \
+            https://api.github.com
 
         if echo "${PERMISSIONS}" | grep "" > /dev/null 2>&1
         then
