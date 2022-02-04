@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       github-token: ${{ steps.github-token.outputs.defined }}
+      github-token-push: ${{ steps.github-token-permissions.outputs.push }}
       deepsource-token: ${{ steps.deepsource-token.outputs.defined }}
     steps:
     - id: github-token
@@ -34,7 +35,7 @@ jobs:
             echo "Found GitHub token"
             echo "::set-output name=defined::true"
         fi
-    - id: github-token-write
+    - id: github-token-permissions
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -50,10 +51,9 @@ jobs:
         echo "Permissions:"
         echo "${PERMISSIONS}" | sed -e 's/^/ - /g'
 
-
-        for KEY in $(echo "${PERMISSIONS}" | jq --raw-output '.user.permissions | keys[]')
+        for KEY in $(echo "${PERMISSIONS}" | jq --raw-output '. | keys[]')
         do
-            VALUE="$(echo "${PERMISSIONS}" | jq --raw-output ".user.permissions.${KEY}" )"
+            VALUE="$(echo "${PERMISSIONS}" | jq --raw-output ".${KEY}" )"
             echo "Found token with ${VALUE} permission for ${KEY} in repo"
             echo "::set-output name=${KEY}::${VALUE}"
         done
@@ -143,7 +143,7 @@ jobs:
     #   - This is a pull request event and the pull actor is the same as the repo owner
     #   - This is a push event and the push event is on branch 'main'
     needs: [test,check-secrets]
-    if: ${{ needs.check-secrets.outputs.github-token == 'true' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
+    if: ${{ needs.check-secrets.outputs.github-token-push == 'true' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
 
     runs-on: ubuntu-latest
 
