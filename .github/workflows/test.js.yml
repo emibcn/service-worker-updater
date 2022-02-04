@@ -40,28 +40,23 @@ jobs:
       run: |
         # https://stackoverflow.com/a/70588035/2928168
         PERMISSIONS="$(
-            curl -sS -f -I \
+            curl -sS \
                 -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com \
-                | grep ^x-oauth-scopes: \
-                | cut -d' ' -f2- \
-                | tr -d "[:space:]" \
-                | tr ',' '\n'
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission" \
+                | jq --raw-output '.user.permissions'
         )"
 
         echo "Permissions:"
         echo "${PERMISSIONS}" | sed -e 's/^/ - /g'
 
-        curl -sS \
-            -H "Authorization: token ${GITHUB_TOKEN}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission"
 
-        if echo "${PERMISSIONS}" | grep "" > /dev/null 2>&1
-        then
-            echo "Found token with write permission to repo"
-            echo "::set-output name=defined::true"
-        fi
+        for KEY in $(echo "${PERMISSIONS}" | jq --raw-output '.user.permissions | keys[]')
+        do
+            VALUE="$(echo "${PERMISSIONS}" | jq --raw-output ".user.permissions.${KEY}" )"
+            echo "Found token with ${VALUE} permission for ${KEY} in repo"
+            echo "::set-output name=${KEY}::${VALUE}"
+        done
     - id: deepsource-token
       env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
