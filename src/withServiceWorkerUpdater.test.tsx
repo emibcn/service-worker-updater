@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  render,
-  fireEvent,
-  act,
-  waitFor,
-  RenderResult
-} from '@testing-library/react'
+import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
 import withServiceWorkerUpdater from './withServiceWorkerUpdater'
@@ -56,18 +50,16 @@ const triggerNewServiceWorker = () => {
 test('detects new service worker', async () => {
   const SWDetector = createServiceWorkerUpdater()
 
-  let app: RenderResult
-  act(() => {
-    app = render(<SWDetector />)
-  })
+  render(<SWDetector />)
 
   act(triggerNewServiceWorker)
 
+  let detectedNewSW: unknown
+  await waitFor(() => {
+    detectedNewSW = screen.getByTestId('dashboard-mock-sw-detected')
+  })
   await act(async () => {
-    await waitFor(() => {
-      const detectedNewSW = app.getByTestId('dashboard-mock-sw-detected')
-      expect(detectedNewSW).toHaveTextContent('true')
-    })
+    expect(detectedNewSW).toHaveTextContent('true')
   })
 })
 
@@ -75,23 +67,21 @@ test('detects new service worker acceptance', async () => {
   const SWDetector = createServiceWorkerUpdater()
 
   const onLoadNewServiceWorkerAccept = jest.fn()
-  let app: RenderResult
-  act(() => {
-    app = render(<SWDetector onAccept={onLoadNewServiceWorkerAccept} />)
-  })
+  render(<SWDetector onAccept={onLoadNewServiceWorkerAccept} />)
 
   act(triggerNewServiceWorker)
 
-  await act(async () => {
-    // User accepts it
-    const button = app.getByTestId('dashboard-mock-fn-accept-sw')
-    expect(button).toBeInTheDocument()
-    fireEvent.click(button)
+  // User accepts it
+  const button = screen.getByTestId('dashboard-mock-fn-accept-sw')
+  expect(button).toBeInTheDocument()
 
-    await waitFor(() => {
-      expect(onLoadNewServiceWorkerAccept).toHaveBeenCalledTimes(1)
-      expect(onLoadNewServiceWorkerAccept).toHaveBeenCalledWith('tested')
-    })
+  fireEvent.click(button)
+
+  await waitFor(() => {
+    expect(onLoadNewServiceWorkerAccept).toHaveBeenCalledTimes(1)
+  })
+  await waitFor(() => {
+    expect(onLoadNewServiceWorkerAccept).toHaveBeenCalledWith('tested')
   })
 })
 
@@ -101,14 +91,10 @@ test('persistence service returns FALSE when new service worker hasnt been detec
 
   persistenceService.clear()
 
-  act(() => {
-    render(<SWDetector />)
-  })
+  render(<SWDetector />)
 
-  await act(async () => {
-    await waitFor(() => {
-      expect(persistenceService.isUpdateNeeded()).toBe(false)
-    })
+  await waitFor(() => {
+    expect(persistenceService.isUpdateNeeded()).toBe(false)
   })
 })
 
@@ -118,16 +104,12 @@ test('persistence service returns TRUE when new service worker is detected', asy
 
   persistenceService.clear()
 
-  act(() => {
-    render(<SWDetector />)
-  })
+  render(<SWDetector />)
 
   act(triggerNewServiceWorker)
 
-  await act(async () => {
-    await waitFor(() => {
-      expect(persistenceService.isUpdateNeeded()).toBe(true)
-    })
+  await waitFor(() => {
+    expect(persistenceService.isUpdateNeeded()).toBe(true)
   })
 })
 
@@ -137,15 +119,10 @@ test('when persistence service returns true, component state reflects that', asy
 
   persistenceService.setUpdateIsNeeded()
 
-  let app: RenderResult
-  act(() => {
-    app = render(<SWDetector />)
-  })
+  render(<SWDetector />)
 
-  await act(async () => {
-    await waitFor(() => {
-      const detectedNewSW = app.getByTestId('dashboard-mock-sw-detected')
-      expect(detectedNewSW).toHaveTextContent('true')
-    })
+  const detectedNewSW = screen.getByTestId('dashboard-mock-sw-detected')
+  await waitFor(() => {
+    expect(detectedNewSW).toHaveTextContent('true')
   })
 })
