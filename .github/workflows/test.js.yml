@@ -23,18 +23,24 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       github-token: ${{ steps.github-token.outputs.defined }}
-      deepsource-token: ${{ steps.github-token.outputs.defined }}
+      deepsource-token: ${{ steps.deepsource-token.outputs.defined }}
     steps:
     - id: github-token
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: "${{ env.GITHUB_TOKEN != '' }}"
-      run: echo "::set-output name=defined::true"
+      run: |
+        if [ "${GITHUB_TOKEN}" != "" ]
+        then
+            echo "::set-output name=defined::true"
+        fi
     - id: deepsource-token
       env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
-      if: "${{ env.DEEPSOURCE_DSN != '' }}"
-      run: echo "::set-output name=defined::true"
+      run: |
+        if [ "${DEEPSOURCE_DSN}" != '' ]
+        then
+            echo "::set-output name=defined::true"
+        fi
 
   test:
     needs: [check-secrets]
