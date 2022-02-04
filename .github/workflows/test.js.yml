@@ -27,6 +27,7 @@ jobs:
       deepsource-token: ${{ steps.deepsource-token.outputs.defined }}
     steps:
     - id: github-token
+      name: Test GitHub token existence
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -36,9 +37,11 @@ jobs:
             echo "::set-output name=defined::true"
         fi
     - id: github-token-permissions
+      name: Test GitHub token permissions
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        echo "Get available permissions from GitHub API"
         # https://stackoverflow.com/a/70588035/2928168
         PERMISSIONS="$(
             curl -sS \
@@ -58,6 +61,7 @@ jobs:
             echo "::set-output name=${KEY}::${VALUE}"
         done
     - id: deepsource-token
+      name: Test Deepsource token existence
       env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
       run: |
