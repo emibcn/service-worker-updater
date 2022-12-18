@@ -34,7 +34,7 @@ jobs:
         if [ "${GITHUB_TOKEN}" != "" ]
         then
             echo "Found GitHub token"
-            echo "::set-output name=defined::true"
+            echo "defined=true" >> "${GITHUB_OUTPUT}"
         fi
     - id: github-token-permissions
       name: Test GitHub token permissions
@@ -58,7 +58,7 @@ jobs:
         do
             VALUE="$(echo "${PERMISSIONS}" | jq --raw-output ".${KEY}" )"
             echo "Found token with ${VALUE} permission for ${KEY} in repo"
-            echo "::set-output name=${KEY}::${VALUE}"
+            echo "${KEY}=${VALUE}" >> "${GITHUB_OUTPUT}"
         done
     - id: deepsource-token
       name: Test Deepsource token existence
@@ -68,7 +68,7 @@ jobs:
         if [ "${DEEPSOURCE_DSN}" != '' ]
         then
             echo "Found DeepSource token"
-            echo "::set-output name=defined::true"
+            echo "defined=true" >> "${GITHUB_OUTPUT}"
         fi
 
   test:
@@ -165,7 +165,7 @@ jobs:
         else
             EXPORT_VALUE="${TMP_GITHUB_REF}"
         fi
-        echo "##[set-output name=branch;]$(echo ${EXPORT_VALUE})"
+        echo "branch=${EXPORT_VALUE}" >> "${GITHUB_OUTPUT}"
       id: extract_branch
 
     - uses: actions/checkout@v3
