@@ -46,7 +46,7 @@
     "react": "^17"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@types/react": "^18.0.1",
     "cross-env": "^7.0.3",
