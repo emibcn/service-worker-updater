@@ -78,7 +78,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
 
     # Map a step output to a job output
     outputs:

@@ -24,7 +24,7 @@
     "update"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=18"
   },
   "scripts": {
     "build": "microbundle-crl --format modern,cjs",
